@@ -7,7 +7,6 @@ import {
     deleteRawVideo,
     deleteProcessedVideo,
 } from "./storage";
-import { Upload } from "@google-cloud/storage/build/cjs/src/resumable-upload";
 
 setupDirectories();
 
@@ -23,15 +22,15 @@ app.post("/process-video", async (req, res) => {
         );
         data = JSON.parse(message);
         if (!data.name) {
-            throw new Error("Invalid message payload received");
+            throw new Error("Invalid message payload received.");
         }
-    } catch (err) {
-        console.error(err);
-        return res.status(400).send("Bad request: missing filename.");
+    } catch (error) {
+        console.error(error);
+        return res.status(400).send("Bad Request: missing filename.");
     }
 
     const inputFileName = data.name;
-    const outputFileName = `processed-${data.name}`;
+    const outputFileName = `processed-${inputFileName}`;
 
     // Download raw video from Cloud Storage
     await downloadRawVideo(inputFileName);
@@ -44,10 +43,7 @@ app.post("/process-video", async (req, res) => {
             deleteRawVideo(inputFileName),
             deleteProcessedVideo(outputFileName),
         ]);
-        console.error(err);
-        return res
-            .status(500)
-            .send("Internal Server Error: failed to process video.");
+        return res.status(500).send("Processing failed");
     }
 
     // Upload processed video to Cloud Storage
