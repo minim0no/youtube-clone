@@ -1,7 +1,24 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { onAuthStateChangedHelper } from "../firebase/firebase";
+import { User } from "firebase/auth";
+import SignIn from "./sign-in";
 
 export default function Navbar() {
+    // Init user state
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChangedHelper((user) => {
+            setUser(user);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     return (
         <nav className="w-full h-14 flex justify-between items-center p-4">
             <Link href="/">
@@ -12,6 +29,7 @@ export default function Navbar() {
                     alt="YouTube Logo"
                 />
             </Link>
+            <SignIn user={user} />
         </nav>
     );
 }
