@@ -30,8 +30,10 @@ export default function Navbar() {
                     alt="YouTube Logo"
                 />
             </Link>
-            {user && <Upload />}
-            <SignIn user={user} />
+            <ul className="flex gap-2">
+                {user && <Upload />}
+                <SignIn user={user} />
+            </ul>
         </nav>
     );
 }

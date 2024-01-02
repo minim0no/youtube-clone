@@ -34,13 +34,13 @@ export default function Upload() {
             />
             <label
                 htmlFor="upload"
-                className=" flex justify-center items-center rounded-xl border-0 cursor-pointer text-xs p-1.5 hover:bg-[#e6e6e6]"
+                className=" flex justify-center items-center rounded-[50%] border-0 cursor-pointer text-xs p-1.5 hover:bg-[#e6e6e6]"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    strokeWidth={1.5}
+                    strokeWidth={1.2}
                     stroke="currentColor"
                     className="w-6 h-6"
                 >
