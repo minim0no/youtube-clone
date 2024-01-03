@@ -11,6 +11,7 @@ const firestore = new Firestore();
 const storage = new Storage();
 
 const rawVideoBucketName = "mono-yt-raw-videos";
+const videoCollectionId = "videos";
 
 export const createUser = functions.auth.user().onCreate((user) => {
     const userInfo = {
@@ -48,4 +49,13 @@ export const generateUploadUrl = onCall({ maxInstances: 1 }, async (req) => {
     });
 
     return { url, fileName };
+});
+
+export const getVideos = onCall({ maxInstances: 1 }, async () => {
+    const firstTenVideos = await firestore
+        .collection(videoCollectionId)
+        .limit(10)
+        .get();
+
+    return firstTenVideos.docs.map((doc) => doc.data());
 });
