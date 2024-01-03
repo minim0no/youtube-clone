@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChangedHelper } from "../firebase/firebase";
 import { User } from "firebase/auth";
 import SignIn from "./sign-in";
-import Upload from "./upload";
+import Upload from "./upload/upload";
 
 export default function Navbar() {
     // Init user state
