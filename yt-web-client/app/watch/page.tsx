@@ -13,5 +13,3 @@ export default function Watch() {
         </div>
     );
 }
-
-export const revalidate = 30;
