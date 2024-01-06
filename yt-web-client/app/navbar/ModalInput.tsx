@@ -1,4 +1,4 @@
-interface UploadModalInputProps {
+interface ModalInputProps {
     id?: "title" | "description";
     label: string;
     placeholder?: string;
@@ -9,7 +9,7 @@ interface UploadModalInputProps {
     setFocused: (focused: boolean) => void;
 }
 
-export default function UploadModalInput({
+export default function ModalInput({
     id,
     label,
     placeholder,
@@ -18,24 +18,40 @@ export default function UploadModalInput({
     setValue,
     focused,
     setFocused,
-}: UploadModalInputProps) {
+}: ModalInputProps) {
     return (
         <div
             className={`w-full border-[1px]  rounded-md px-3 pb-3 ml-2 ${
                 id === "title"
-                    ? `${value ? "border-[#e6e6e6]" : "border-[#c00]"}`
-                    : "border-[#e6e6e6]"
+                    ? `${
+                          value
+                              ? `${
+                                    focused
+                                        ? "border-[#2196f3]"
+                                        : "border-[#e6e6e6]"
+                                }`
+                              : "border-[#c00]"
+                      }`
+                    : `${focused ? "border-[#2196f3]" : "border-[#e6e6e6]"}`
             }
-    ${focused ? "border-[#2196f3]" : ""}`}
+    `}
         >
             <label
                 htmlFor={id}
                 className={`font-normal tracking-[.011em]  text-xs leading-3 mt-3 ${
                     id === "title"
-                        ? `${value ? "text-[#606060]" : "text-[#c00]"}`
-                        : "text-[#606060]"
+                        ? `${
+                              value
+                                  ? `${
+                                        focused
+                                            ? "text-[#2196f3]"
+                                            : "text-[#606060]"
+                                    }`
+                                  : "text-[#c00]"
+                          }`
+                        : `${focused ? "text-[#2196f3]" : "text-[#606060]"}`
                 }
-        ${focused ? "text-[#2196f3]" : ""}`}
+        `}
             >
                 {label}
             </label>

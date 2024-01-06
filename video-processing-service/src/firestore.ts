@@ -15,7 +15,9 @@ export interface Video {
     status?: "processing" | "processed";
     title?: string;
     description?: string;
+    thumbnail?: boolean;
 }
+
 /**
  * Fetches the video from Firestore
  * @param videoId - The video you want to fetch
@@ -41,6 +43,7 @@ export function setVideo(videoId: string, video: Video) {
         .doc(videoId)
         .set(video, { merge: true });
 }
+
 /**
  * Determine if the video has not been added to Firestore
  * @param videoId - The video id

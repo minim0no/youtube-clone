@@ -1,5 +1,4 @@
-import { set } from "firebase/database";
-import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface UploadThumbnailProps {
     image: string;
@@ -16,7 +15,9 @@ export default function UploadThumbnail({
 }: UploadThumbnailProps) {
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.item(0);
-        setThumbnail(file as File | undefined);
+        if (file) {
+            setThumbnail(file);
+        }
         let reader = new FileReader();
 
         reader.onloadend = () => {
@@ -33,18 +34,18 @@ export default function UploadThumbnail({
                 Select or upload a picture that shows what's in your video. A
                 good thumbnail stands out and draws viewers' attention.
             </p>
-            <input
-                id="thumbnail"
-                className="hidden"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-            />
-            <label
-                htmlFor="thumbnail"
-                className="w-[px] h-[70px] flex flex-col justify-center items-center text-xs leading-4 text-[#606060] border-[1px] border-black border-opacity-10 hover:border-opacity-30 border-dashed rounded-sm  transition--border-opacity ease-in-out duration-300 cursor-pointer"
-            >
-                {thumbnail === undefined ? (
+            <div className="flex justify-start items-center gap-2">
+                <input
+                    id="thumbnail"
+                    className="hidden"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                />
+                <label
+                    htmlFor="thumbnail"
+                    className="w-[129px] h-[70px] flex flex-col justify-center items-center text-xs leading-4 text-[#606060] border-[1px] border-black border-opacity-10 hover:border-opacity-30 border-dashed rounded-sm  transition--border-opacity ease-in-out duration-300 cursor-pointer"
+                >
                     <div className="flex flex-col justify-center items-center px-3">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -62,14 +63,21 @@ export default function UploadThumbnail({
                         </svg>
                         Upload thumbnail
                     </div>
+                </label>
+                {thumbnail === undefined ? (
+                    ""
                 ) : (
-                    <img
-                        src={image}
-                        alt="thumbnail"
-                        className="w-full h-full mx-3"
-                    />
+                    <div className="flex justify-center items-center w-[129px] h-[70px] bg-black">
+                        <Image
+                            src={image}
+                            width={129}
+                            height={70}
+                            alt="thumbnail"
+                            className="w-full h-full object-contain mx-3"
+                        />
+                    </div>
                 )}
-            </label>
+            </div>
         </div>
     );
 }

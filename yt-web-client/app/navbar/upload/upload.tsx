@@ -1,13 +1,11 @@
 "use client";
 
-import { doc } from "firebase/firestore";
 import { uploadVideo } from "../../firebase/functions";
-import { useEffect, useState } from "react";
-import { set } from "firebase/database";
+import { useState } from "react";
 import UploadModalButton from "./uploadModalButton";
-import UploadModalInput from "./uploadModalInput";
 import SectionHeader from "../sectionHeader";
 import UploadThumbnail from "./uploadThumbnail";
+import ModalInput from "../ModalInput";
 
 export default function Upload() {
     const [modalOpen, setModalOpen] = useState(false);
@@ -19,6 +17,7 @@ export default function Upload() {
     const [image, setImage] = useState<string>("");
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setModalOpen(false);
         const file = event.target.files?.item(0);
         if (file) {
             handleUpload(file);
@@ -27,7 +26,12 @@ export default function Upload() {
 
     const handleUpload = async (file: File) => {
         try {
-            const response = await uploadVideo(file);
+            const response = await uploadVideo(
+                file,
+                thumbnail,
+                title,
+                description
+            );
             alert(
                 `File uploaded succcessfully. Response: ${JSON.stringify(
                     response
@@ -71,7 +75,7 @@ export default function Upload() {
                             <section className="p-7 border-b-[1px]">
                                 <div className="flex flex-col justify-start items-start gap-6">
                                     <SectionHeader value={"Details"} />
-                                    <UploadModalInput
+                                    <ModalInput
                                         id="title"
                                         label="Title (required)"
                                         placeholder="Add a title that describes your video"
@@ -81,7 +85,7 @@ export default function Upload() {
                                         focused={titleFocused}
                                         setFocused={setTitleFocused}
                                     />
-                                    <UploadModalInput
+                                    <ModalInput
                                         id="description"
                                         label="Description"
                                         placeholder="Tell viewers about your video"
@@ -106,10 +110,15 @@ export default function Upload() {
                                     type="file"
                                     accept="video/*"
                                     onChange={handleFileChange}
+                                    {...(!title && { disabled: true })}
                                 />
                                 <label
                                     htmlFor="upload"
-                                    className="flex justify-center items-center min-w-[36px] h-[36px] px-4 bg-[#065fd4] font-semibold text-white text-sm leading-5 tracking-[0.01em] border-0 rounded-sm cursor-pointer"
+                                    className={`flex justify-center items-center min-w-[36px] h-[36px] px-4 ${
+                                        !title
+                                            ? "bg-[#ccc] cursor-not-allowed"
+                                            : "bg-[#065fd4] cursor-pointer"
+                                    } font-semibold text-white text-sm leading-5 tracking-[0.01em] border-0 rounded-sm`}
                                 >
                                     SELECT FILES
                                 </label>

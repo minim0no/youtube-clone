@@ -11,6 +11,7 @@ const firestore = new Firestore();
 const storage = new Storage();
 
 const rawVideoBucketName = "mono-yt-raw-videos";
+const thumbnailsBucketName = "mono-yt-thumbnails";
 const videoCollectionId = "videos";
 
 export const createUser = functions.auth.user().onCreate((user) => {
@@ -52,10 +53,70 @@ export const generateUploadUrl = onCall({ maxInstances: 1 }, async (req) => {
 });
 
 export const getVideos = onCall({ maxInstances: 1 }, async () => {
-    const firstTenVideos = await firestore
+    const firstFifty = await firestore
         .collection(videoCollectionId)
-        .limit(10)
+        .limit(50)
         .get();
 
-    return firstTenVideos.docs.map((doc) => doc.data());
+    return firstFifty.docs.map((doc) => doc.data());
+});
+
+export const setVideoMetadata = onCall(async (req) => {
+    // Check if the user is authenticated
+    if (!req.auth)
+        throw new functions.https.HttpsError(
+            "failed-precondition",
+            "The function must be called while authenticated."
+        );
+
+    const videoId = req.data.videoId;
+    const title = req.data.title;
+    const description = req.data.description;
+    const thumbnail = req.data.thumbnail;
+
+    await firestore.collection(videoCollectionId).doc(videoId).set(
+        {
+            title,
+            description,
+            thumbnail,
+        },
+        { merge: true }
+    );
+
+    return;
+});
+
+export const generateThumbnailUploadUrl = onCall(async (req) => {
+    if (!req.auth)
+        throw new functions.https.HttpsError(
+            "failed-precondition",
+            "The function must be called while authenticated."
+        );
+
+    const fileName = req.data.videoId;
+
+    // Get a v4 signed URL for uploading file
+    const [url] = await storage
+        .bucket(thumbnailsBucketName)
+        .file(fileName)
+        .getSignedUrl({
+            version: "v4",
+            action: "write",
+            expires: Date.now() + 15 * 60 * 1000,
+        });
+
+    console.log("Thumbnail Upload Signed URL created.");
+
+    return { url };
+});
+
+export const makeThumbnailPublic = onCall(async (req) => {
+    const fileName = req.data.videoId;
+
+    await storage.bucket(thumbnailsBucketName).file(fileName).makePublic();
+    console.log(
+        `Thumbnail is public at gs://${thumbnailsBucketName}/${fileName}`
+    );
+
+    return;
 });

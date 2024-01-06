@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFunctions } from "firebase/functions";
+
 import {
     getAuth,
     signInWithPopup,
