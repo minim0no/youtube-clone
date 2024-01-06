@@ -10,12 +10,18 @@ const videoCollectionId = "videos";
 
 export interface Video {
     id?: string;
-    uid?: string;
+    user?: User;
     filename?: string;
     status?: "processing" | "processed";
     title?: string;
     description?: string;
     thumbnail?: boolean;
+}
+
+export interface User {
+    id?: string;
+    email?: string;
+    photoUrl?: string;
 }
 
 /**
@@ -52,4 +58,15 @@ export function setVideo(videoId: string, video: Video) {
 export async function isNewVideo(videoId: string) {
     const video = await getVideo(videoId);
     return video?.status === undefined;
+}
+
+/**
+ *
+ * @param userId - The user id
+ * @returns An object of the user's data
+ */
+export async function getUser(userId: string) {
+    return (
+        await firestore.collection("users").doc(userId).get()
+    ).data() as User;
 }

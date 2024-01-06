@@ -67,13 +67,13 @@ export default function UploadThumbnail({
                 {thumbnail === undefined ? (
                     ""
                 ) : (
-                    <div className="flex justify-center items-center w-[129px] h-[70px] bg-black">
+                    <div className="flex justify-center items-center w-[129px] h-[70px] bg-transparent">
                         <Image
                             src={image}
                             width={129}
                             height={70}
                             alt="thumbnail"
-                            className="w-full h-full object-contain mx-3"
+                            className="w-full h-full object-cover mx-3"
                         />
                     </div>
                 )}

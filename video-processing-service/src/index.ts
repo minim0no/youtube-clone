@@ -7,7 +7,7 @@ import {
     deleteRawVideo,
     deleteProcessedVideo,
 } from "./storage";
-import { isNewVideo, setVideo } from "./firestore";
+import { isNewVideo, setVideo, getUser } from "./firestore";
 
 setupDirectories();
 
@@ -41,7 +41,7 @@ app.post("/process-video", async (req, res) => {
     } else {
         await setVideo(videoId, {
             id: videoId,
-            uid: videoId.split("-")[0],
+            user: await getUser(videoId.split("-")[0]),
             status: "processing",
         });
     }

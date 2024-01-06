@@ -12,12 +12,18 @@ const makeThumbnailPublic = httpsCallable(functions, "makeThumbnailPublic");
 
 export interface Video {
     id?: string;
-    uid?: string;
+    user: User;
     filename?: string;
     status?: "processing" | "processed";
     title?: string;
     description?: string;
     thumbnail?: boolean;
+}
+
+export interface User {
+    id?: string;
+    email?: string;
+    photoUrl?: string;
 }
 
 async function uploadThumbnail(videoId: string, thumbnail: File) {
